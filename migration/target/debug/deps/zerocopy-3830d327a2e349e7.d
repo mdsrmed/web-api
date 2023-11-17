@@ -1,0 +1,14 @@
+/Users/mdshohidurrahman/web-api/migration/target/debug/deps/zerocopy-3830d327a2e349e7.rmeta: /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/lib.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macros.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macro_util.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/util.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/third_party/rust/layout.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/wrappers.rs
+
+/Users/mdshohidurrahman/web-api/migration/target/debug/deps/libzerocopy-3830d327a2e349e7.rlib: /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/lib.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macros.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macro_util.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/util.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/third_party/rust/layout.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/wrappers.rs
+
+/Users/mdshohidurrahman/web-api/migration/target/debug/deps/zerocopy-3830d327a2e349e7.d: /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/lib.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macros.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macro_util.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/util.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/third_party/rust/layout.rs /Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/wrappers.rs
+
+/Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/lib.rs:
+/Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macros.rs:
+/Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/macro_util.rs:
+/Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/util.rs:
+/Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/third_party/rust/layout.rs:
+/Users/mdshohidurrahman/.cargo/registry/src/index.crates.io-6f17d22bba15001f/zerocopy-0.7.26/src/wrappers.rs:
+
+# env-dep:CARGO_PKG_VERSION=0.7.26
