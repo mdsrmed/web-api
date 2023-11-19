@@ -3079,6 +3079,7 @@ dependencies = [
  "entity",
  "migration",
  "sea-orm",
+ "serde",
  "tokio",
  "uuid",
 ]
