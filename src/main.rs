@@ -1,13 +1,14 @@
-use std::path::Path;
+// use std::path::Path;
 
 use axum::{
+    extract::Path,
     http::StatusCode,
     response::IntoResponse,
     routing::{delete, get, post, put},
     Json, Router,
 };
 use chrono::Utc;
-use entity::user;
+use entity::user::{self, Model};
 use models::user_models::{CreateUserModel, LoginUserModel, UpdateUserModel, UserModel};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, Condition, Database, DatabaseConnection, EntityTrait,
@@ -117,7 +118,7 @@ async fn update_user_put(
         .into();
 
     user.name = Set(user_data.name);
-    user.updata(&db).await.unwrap();
+    user.update(&db).await.unwrap();
 
     db.close().await.unwrap();
     (StatusCode::ACCEPTED, "Updated")
@@ -129,7 +130,7 @@ async fn delete_user_delete(Path(uuid): Path<Uuid>) -> impl IntoResponse {
             .await
             .unwrap();
 
-    let mut user: entity::user::ActiveModel = entity::user::Entity::find()
+    let mut user: Model = entity::user::Entity::find()
         .filter(entity::user::Column::Uuid.eq(uuid))
         .one(&db)
         .await
