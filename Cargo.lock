@@ -3134,6 +3134,7 @@ dependencies = [
  "chrono",
  "dotenv",
  "entity",
+ "lazy_static",
  "migration",
  "sea-orm",
  "serde",

@@ -3,7 +3,7 @@ use axum::routing::{delete, get, put};
 use axum::{http::Method, routing::post, Router};
 use tower_http::cors::{Any, CorsLayer};
 
-pub fn auth_routes() -> Router {
+pub fn user_routes() -> Router {
     let cors: CorsLayer = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
         .allow_origin(Any);

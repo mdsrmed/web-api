@@ -2,17 +2,21 @@ use axum::{http::StatusCode, response::IntoResponse, Json};
 use chrono::Utc;
 use entity::user;
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, Condition, Database, DatabaseConnection, EntityTrait, Set,
+    ActiveModelTrait, ColumnTrait, Condition, Database, DatabaseConnection, EntityTrait,
+    QueryFilter, Set,
 };
 use uuid::Uuid;
 
 use crate::models::user_models::{CreateUserModel, LoginUserModel, UserModel};
 
-pub async fn create_user_post(Json(user_data): axum::Json<CreateUserModel>) -> impl IntoResponse {
-    let db: DatabaseConnection =
-        Database::connect("postgres://postgres:password@localhost:5432/webapi")
-            .await
-            .unwrap();
+pub async fn create_user_post(
+    axum::Extension(db): axum::Extension<DatabaseConnection>,
+    Json(user_data): axum::Json<CreateUserModel>,
+) -> impl IntoResponse {
+    // let db: DatabaseConnection =
+    //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
+    //         .await
+    //         .unwrap();
 
     let user_model = user::ActiveModel {
         name: Set(user_data.name.to_owned()),
@@ -29,11 +33,14 @@ pub async fn create_user_post(Json(user_data): axum::Json<CreateUserModel>) -> i
     (StatusCode::ACCEPTED, "Inserted")
 }
 
-pub async fn login_user_post(Json(user_data): Json<LoginUserModel>) -> impl IntoResponse {
-    let db: DatabaseConnection =
-        Database::connect("postgres://postgres:password@localhost:5432/webapi")
-            .await
-            .unwrap();
+pub async fn login_user_post(
+    axum::Extension(db): axum::Extension<DatabaseConnection>,
+    Json(user_data): Json<LoginUserModel>,
+) -> impl IntoResponse {
+    // let db: DatabaseConnection =
+    //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
+    //         .await
+    //         .unwrap();
 
     let user = entity::user::Entity::find()
         .filter(

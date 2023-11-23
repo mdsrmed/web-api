@@ -8,13 +8,14 @@ use uuid::Uuid;
 use crate::models::user_models::{UpdateUserModel, UserModel};
 
 pub async fn update_user_put(
+    axum::Extension(db): axum::Extension<DatabaseConnection>,
     Path(uuid): Path<Uuid>,
     axum::Json(user_data): Json<UpdateUserModel>,
 ) -> impl IntoResponse {
-    let db: DatabaseConnection =
-        Database::connect("postgres://postgres:password@localhost:5432/webapi")
-            .await
-            .unwrap();
+    // let db: DatabaseConnection =
+    //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
+    //         .await
+    //         .unwrap();
 
     let mut user: entity::user::ActiveModel = entity::user::Entity::find()
         .filter(entity::user::Column::Uuid.eq(uuid))
@@ -31,11 +32,14 @@ pub async fn update_user_put(
     (StatusCode::ACCEPTED, "Updated")
 }
 
-pub async fn delete_user_delete(Path(uuid): Path<Uuid>) -> impl IntoResponse {
-    let db: DatabaseConnection =
-        Database::connect("postgres://postgres:password@localhost:5432/webapi")
-            .await
-            .unwrap();
+pub async fn delete_user_delete(
+    axum::Extension(db): axum::Extension<DatabaseConnection>,
+    Path(uuid): Path<Uuid>,
+) -> impl IntoResponse {
+    // let db: DatabaseConnection =
+    //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
+    //         .await
+    //         .unwrap();
 
     let user: Model = entity::user::Entity::find()
         .filter(entity::user::Column::Uuid.eq(uuid))
@@ -55,10 +59,10 @@ pub async fn delete_user_delete(Path(uuid): Path<Uuid>) -> impl IntoResponse {
 }
 
 pub async fn all_user_get() -> impl IntoResponse {
-    let db: DatabaseConnection =
-        Database::connect("postgres://postgres:password@localhost:5432/webapi")
-            .await
-            .unwrap();
+    // let db: DatabaseConnection =
+    //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
+    //         .await
+    //         .unwrap();
 
     let users: Vec<UserModel> = entity::user::Entity::find()
         .all(&db)
