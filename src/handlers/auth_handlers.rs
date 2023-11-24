@@ -2,21 +2,41 @@ use axum::{http::StatusCode, response::IntoResponse, Json};
 use chrono::Utc;
 use entity::user;
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, Condition, Database, DatabaseConnection, EntityTrait,
-    QueryFilter, Set,
+    ActiveModelTrait, ColumnTrait, Condition, DatabaseConnection, EntityTrait, QueryFilter, Set,
 };
 use uuid::Uuid;
 
-use crate::models::user_models::{CreateUserModel, LoginUserModel, UserModel};
+use crate::{
+    models::user_models::{CreateUserModel, LoginUserModel, UserModel},
+    utils::api_errors::APIError,
+};
 
 pub async fn create_user_post(
     axum::Extension(db): axum::Extension<DatabaseConnection>,
     Json(user_data): axum::Json<CreateUserModel>,
-) -> impl IntoResponse {
+) -> Result<(), APIError> {
     // let db: DatabaseConnection =
     //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
     //         .await
     //         .unwrap();
+
+    let user = entity::user::Entity::find()
+        .filter(entity::user::Column::Email.eq(user_data.email.clone()))
+        .one(&db)
+        .await
+        .map_err(|err| APIError {
+            message: err.to_string(),
+            status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            error_code: Some(50),
+        })?;
+
+    if user != None {
+        return Err(APIError {
+            message: "User exists".to_owned(),
+            status_code: StatusCode::CONFLICT,
+            error_code: Some(40),
+        });
+    }
 
     let user_model = user::ActiveModel {
         name: Set(user_data.name.to_owned()),
@@ -27,16 +47,19 @@ pub async fn create_user_post(
         ..Default::default()
     };
 
-    user_model.insert(&db).await.unwrap();
+    user_model.insert(&db).await.map_err(|err| APIError {
+        message: err.to_string(),
+        status_code: StatusCode::INTERNAL_SERVER_ERROR,
+        error_code: Some(50),
+    })?;
 
-    db.close().await.unwrap();
-    (StatusCode::ACCEPTED, "Inserted")
+    Ok(())
 }
 
 pub async fn login_user_post(
     axum::Extension(db): axum::Extension<DatabaseConnection>,
     Json(user_data): Json<LoginUserModel>,
-) -> impl IntoResponse {
+) -> Result<Json<UserModel>, APIError> {
     // let db: DatabaseConnection =
     //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
     //         .await
@@ -50,8 +73,16 @@ pub async fn login_user_post(
         )
         .one(&db)
         .await
-        .unwrap()
-        .unwrap();
+        .map_err(|err| APIError {
+            message: err.to_string(),
+            status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            error_code: Some(50),
+        })?
+        .ok_or(APIError {
+            message: "Not Found".to_owned(),
+            status_code: StatusCode::NOT_FOUND,
+            error_code: Some(44),
+        })?;
 
     let data = UserModel {
         name: user.name,
@@ -61,6 +92,5 @@ pub async fn login_user_post(
         created_at: user.created_at,
     };
 
-    db.close().await.unwrap();
-    (StatusCode::ACCEPTED, Json(data))
+    Ok(Json(data))
 }

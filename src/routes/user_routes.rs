@@ -1,6 +1,6 @@
 use crate::handlers::user_handlers;
 use axum::routing::{delete, get, put};
-use axum::{http::Method, routing::post, Router};
+use axum::{http::Method, Router};
 use tower_http::cors::{Any, CorsLayer};
 
 pub fn user_routes() -> Router {

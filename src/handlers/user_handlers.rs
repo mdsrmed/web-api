@@ -1,17 +1,18 @@
 use axum::{extract::Path, http::StatusCode, response::IntoResponse, Json};
 use entity::user::Model;
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, Database, DatabaseConnection, EntityTrait, QueryFilter, Set,
-};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
 use uuid::Uuid;
 
-use crate::models::user_models::{UpdateUserModel, UserModel};
+use crate::{
+    models::user_models::{UpdateUserModel, UserModel},
+    utils::api_errors::APIError,
+};
 
 pub async fn update_user_put(
     axum::Extension(db): axum::Extension<DatabaseConnection>,
     Path(uuid): Path<Uuid>,
     axum::Json(user_data): Json<UpdateUserModel>,
-) -> impl IntoResponse {
+) -> Result<(), APIError> {
     // let db: DatabaseConnection =
     //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
     //         .await
@@ -21,21 +22,34 @@ pub async fn update_user_put(
         .filter(entity::user::Column::Uuid.eq(uuid))
         .one(&db)
         .await
-        .unwrap()
-        .unwrap()
+        .map_err(|err| APIError {
+            message: err.to_string(),
+            status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            error_code: Some(50),
+        })?
+        .ok_or(APIError {
+            message: "Not Found".to_owned(),
+            status_code: StatusCode::NOT_FOUND,
+            error_code: Some(44),
+        })?
         .into();
 
     user.name = Set(user_data.name);
-    user.update(&db).await.unwrap();
+    user.update(&db).await.map_err(|err| APIError {
+        message: err.to_string(),
+        status_code: StatusCode::INTERNAL_SERVER_ERROR,
+        error_code: Some(50),
+    })?;
 
-    db.close().await.unwrap();
-    (StatusCode::ACCEPTED, "Updated")
+    // db.close().await.unwrap();
+    // (StatusCode::ACCEPTED, "Updated")
+    Ok(())
 }
 
 pub async fn delete_user_delete(
     axum::Extension(db): axum::Extension<DatabaseConnection>,
     Path(uuid): Path<Uuid>,
-) -> impl IntoResponse {
+) -> Result<(), APIError> {
     // let db: DatabaseConnection =
     //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
     //         .await
@@ -45,20 +59,33 @@ pub async fn delete_user_delete(
         .filter(entity::user::Column::Uuid.eq(uuid))
         .one(&db)
         .await
-        .unwrap()
-        .unwrap()
+        .map_err(|err| APIError {
+            message: err.to_string(),
+            status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            error_code: Some(50),
+        })?
+        .ok_or(APIError {
+            message: "Not Found".to_owned(),
+            status_code: StatusCode::NOT_FOUND,
+            error_code: Some(44),
+        })?
         .into();
 
     entity::user::Entity::delete_by_id(user.id)
         .exec(&db)
         .await
-        .unwrap();
+        .map_err(|err| APIError {
+            message: err.to_string(),
+            status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            error_code: Some(50),
+        })?;
 
-    db.close().await.unwrap();
-    (StatusCode::ACCEPTED, "Deleted")
+    Ok(())
 }
 
-pub async fn all_user_get() -> impl IntoResponse {
+pub async fn all_user_get(
+    db: axum::Extension<DatabaseConnection>,
+) -> Result<Json<Vec<UserModel>>, APIError> {
     // let db: DatabaseConnection =
     //     Database::connect("postgres://postgres:password@localhost:5432/webapi")
     //         .await
@@ -67,7 +94,11 @@ pub async fn all_user_get() -> impl IntoResponse {
     let users: Vec<UserModel> = entity::user::Entity::find()
         .all(&db)
         .await
-        .unwrap()
+        .map_err(|err| APIError {
+            message: err.to_string(),
+            status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            error_code: Some(50),
+        })?
         .into_iter()
         .map(|item| UserModel {
             name: item.name,
@@ -78,6 +109,5 @@ pub async fn all_user_get() -> impl IntoResponse {
         })
         .collect();
 
-    db.close().await.unwrap();
-    (StatusCode::ACCEPTED, Json(users))
+    Ok(Json(users))
 }
